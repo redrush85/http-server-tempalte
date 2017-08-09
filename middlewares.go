@@ -39,15 +39,14 @@ func OpenTracing(next http.Handler) http.Handler {
 // createRequestSpan is a helper function that creates request tracing span.
 func createRequestSpan(r *http.Request) (span tracing.Span, spanCtx context.Context) {
 
-	requestCtx := r.Context()
+	var sp tracing.Span
 
 	tracingSpanCtx, err := tracing.GlobalTracer().Extract(tracing.TextMap, r.Header)
 	if err != nil {
-		span = tracing.StartSpan(ServiceName, tracing.ChildOf(tracingSpanCtx))
-		spanCtx = tracing.ContextWithSpan(requestCtx, span)
-		return
+		sp = tracing.StartSpan(ServiceName)
+	} else {
+		sp = tracing.StartSpan(ServiceName, tracing.ChildOf(tracingSpanCtx))
 	}
 
-	span, spanCtx = tracing.StartSpanFromContext(requestCtx, ServiceName)
-	return
+	return sp, tracing.ContextWithSpan(r.Context(), sp)
 }

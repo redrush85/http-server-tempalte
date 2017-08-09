@@ -16,7 +16,7 @@ type AppService struct{}
 
 // Hello - returns Hello + name string
 func (a *AppService) Hello(ctx context.Context, name string) string {
-	childSpan, _ := tracer.StartSpanFromContext(ctx, "my-child-operation")
+	childSpan, _ := tracer.StartSpanFromContext(ctx, "service_hello")
 	defer childSpan.Finish()
 
 	return "Hello " + name

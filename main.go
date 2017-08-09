@@ -5,9 +5,6 @@ import (
 	"net/http"
 )
 
-// Middleware represents HTTP middleware that can be attached to middleware chain.
-type Middleware func(http.Handler) http.Handler
-
 func main() {
 
 	handler := Handler{
