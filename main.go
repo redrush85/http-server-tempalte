@@ -3,9 +3,16 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
+var logger *zap.Logger
+
 func main() {
+
+	logger, _ = zap.NewProduction()
+	defer logger.Sync() // flushes buffer, if any
 
 	handler := Handler{
 		DB:      "localhost",

@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 
+	"go.uber.org/zap"
+
 	tracing "github.com/opentracing/opentracing-go"
 )
 
@@ -13,6 +15,7 @@ func RecoverMiddleware(h http.Handler) http.Handler {
 		defer func() {
 			r := recover()
 			if r != nil {
+				logger.Error("Request recovered from panic.", zap.Any("error", r))
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			}
 		}()
